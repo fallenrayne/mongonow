@@ -1,0 +1,64 @@
+body {
+  margin:0;
+  padding:0;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+header {
+  font-weight:bold;
+  padding:3px;
+  background-color:#000;
+  color:#fff;
+  display:block;
+}
+
+label {
+    display:block;
+    margin-top:5px;
+    font-weight:bold;
+}
+
+.card select {
+    width:130px;
+}
+
+#form select {
+    margin-bottom: 5px;
+    width: 250px;
+}
+
+#form input {
+    margin-bottom: 5px;
+    width: 250px;
+}
+
+#content {
+    width:100%;
+    line-height: 130%;
+}
+
+#form {
+    float:left;
+    width:265px;
+    padding:5px;
+    margin:9px 0 0 10px;
+    border:1px solid black;
+}
+
+#cards {
+    margin-left:283px;
+    padding:5px;
+    display:block;
+}
+
+.card {
+    display:block;
+    float:left;
+    width:165px;
+    overflow:auto;
+    font-size: .8em;
+    margin:4px;
+    padding:3px;
+    height:230px;
+    border:1px solid black;
+}
