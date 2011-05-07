@@ -1,45 +1,101 @@
-var docs = '';
+function getCollections(e){
+    var name = $(e.target).html();
+    addHistory(name,'db');
+    now.getCollections(name);
+}
 
-$('#list').delegate('.db','click',function(){
-    now.getCollections($(this).html());
-});
+function getDocuments(e){
+    var name = $(e.target).html();
+    addHistory(name,'col');
+    now.getDocuments(name);
+}
 
-$('#list').delegate('.collection','click',function(){
-    now.getDocuments($(this).html());
-});
+function getDocument(e){
+    var name = $(e.target).html();
+    addHistory(name,'doc');
+    now.getDocument(name);
+}
 
-$('#list').delegate('.document','click',function(e){
-    $('#list tr').empty();
+function addHistory(name,type){
+    var history = $('#history');
+    if(history.children('span:last-child').html() != name){
+        while($('#history').children().size() >= 5){
+            $('#history').children('span:first-child').remove();
+        }
+        $('#history').append('<span class="historyText" type="' + type + '">' + name + '</span>');
+    }
+}
 
-    var document = docs[$(e.target).attr('id')];
-});
+function traverseHistory(e){
+    var type = $(e.target).attr('type');
+    switch(type){
+        case 'db':
+            getCollections(e);
+            break;
+        case 'col':
+            getDocuments(e);
+            break;
+        case 'doc':
+            getDocument(e);
+            break
+        default:
+            console.log('Fail!');
+    }
+}
+
+$('#history').delegate('.historyText','click',traverseHistory);
+
+$('#list').delegate('.db','click',getCollections);
+
+$('#list').delegate('.collection','click',getDocuments);
+
+$('#list').delegate('.document','click',getDocument);
+
+function displayDocument(doc,id){
+    var output = "";
+    for(var prop in doc){
+        if(doc[prop] != null){
+            if(typeof doc[prop] == 'object'){
+                output += "<strong>" + prop + ":</strong>";
+                output += "<ul id='" + id + "' style='border:1px solid black;'>";
+                output += displayDocument(doc[prop],'#'+prop);
+                output += "</ul>";
+            }else{
+                output += '<li class="prop">' + prop + ': ' + doc[prop] + '</li>';
+            }
+        }
+    }
+    return output;
+}
 
 $('#getDatabases').click(function(){
     now.getDatabases();
 });
 
-now.returnDatabases = function(val,databases){
+now.returnDatabases = function(err,databases){
     $('#list').empty();
 
     for(var i = 0; i < databases.length; i++){
-        $('#list').append('<tr><td class="db">' + databases[i] + '</td></tr>');
+        $('#list').append('<li class="db">' + databases[i] + '</li>');
     }
 }
 
-now.returnCollections = function(val,collections){
-    $('#list tr').empty();
+now.returnCollections = function(err,collections){
+    $('#list').empty();
     
     for(var i = 0; i < collections.length; i++){
-        $('#list').append('<tr><td class="collection">' + collections[i] + '</td></tr>');
+        $('#list').append('<li class="collection">' + collections[i] + '</li>');
     }
 }
 
-now.returnDocuments = function(val,documents){
-    $('#list tr').empty();
+now.returnDocuments = function(err,documents){
+    $('#list').empty();
 
-    docs = documents;
-    
     for(var i = 0; i < documents.length; i++){
-        $('#list').append('<tr><td class="document" id="' + i + '">' + documents[i]._id + '</td></tr>');
+        $('#list').append('<li class="document" id="' + i + '">' + documents[i]._id + '</li>');
     }
+}
+
+now.returnDocument = function(err,document){
+    $('#list').empty().append(displayDocument(document,'#list'));
 }

@@ -14,16 +14,21 @@ if (!module.parent) {
     var everyone = require("now").initialize(app);
 
     everyone.now.getDatabases = function(){
-        app.server.dbNames(everyone.now.returnDatabases);
+        app.server.dbNames(this.now.returnDatabases);
     }
 
     everyone.now.getCollections = function(db){
         app.db = db;
-        app.server.db(app.db).collectionNames(everyone.now.returnCollections);
+        app.server.db(app.db).collectionNames(this.now.returnCollections);
     }
 
     everyone.now.getDocuments = function(collection){
-        app.server.db(app.db).collection(collection).find().sort({name:1}).limit(5).skip(1).toArray(everyone.now.returnDocuments)
+        app.collection = collection;
+        app.server.db(app.db).collection(collection).find().sort({name:1}).limit(50).skip(1).toArray(this.now.returnDocuments)
+    }
+
+    everyone.now.getDocument = function(document){
+        app.server.db(app.db).collection(app.collection).findOne({name:document},this.now.returnDocument);
     }
 
     console.log("Express server listening on port %d", app.address().port);
