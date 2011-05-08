@@ -1,12 +1,10 @@
 body {
   margin:0;
   padding:0;
-  font: 14px "Lucida Grande", Helvetica, sans-serif;
+  font:bold 18px "Lucida Grande", Helvetica, sans-serif;
 }
 
 header {
-  font-weight:bold;
-  font-size:1.5em;
   padding:3px;
   background-color:#000;
   color:#fff;
@@ -35,9 +33,7 @@ header {
 #list li {
     margin:10px;
     border:1px solid #000;
-    font-size:1.5em;
     padding:3px;
-    font-weight: bold;
     background-color:#666;
     color:#fff;
 }
@@ -48,4 +44,14 @@ header {
 
 .clicky:hover {
     color:#999;
+}
+
+#controls span{
+    color:#f00;
+    cursor: pointer;
+    padding:0 10px;
+}
+
+#next {
+    float:right;
 }

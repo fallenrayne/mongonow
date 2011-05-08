@@ -1,6 +1,4 @@
-var current = 1;
-var next = 51;
-var prev = 1;
+var page = 0;
 
 function getCollections(e){
     var name = $(e.target).html();
@@ -11,15 +9,21 @@ function getCollections(e){
 function getDocuments(e){
     var name = $(e.target).html();
     addHistory(name,'col');
-    now.getDocuments(name,current);
+    now.getDocuments(name,page);
 }
 
 function nextDocuments(){
-
+    if(page >= 0){
+        page += 50;
+    }
+    now.getDocuments(null,page);
 }
 
 function prevDocuments(){
-    
+    if(page >= 50){
+        page -= 50;
+    }
+    now.getDocuments(null,page);
 }
 
 function getDocument(e){
@@ -81,8 +85,15 @@ $(document).ready(function(){
 
     $('#list').delegate('.document','click',getDocument);
 
+    $('#next').click(nextDocuments);
+
+    $('#prev').click(prevDocuments);
+
+    $('#title').click(now.getDatabases);
+
     now.returnDatabases = function(err,databases){
         $('#list').empty();
+        $('#controls').hide();
 
         for(var i = 0; i < databases.length; i++){
             $('#list').append('<li class="db clicky">' + databases[i] + '</li>');
@@ -91,6 +102,7 @@ $(document).ready(function(){
 
     now.returnCollections = function(err,collections){
         $('#list').empty();
+        $('#controls').hide();
 
         for(var i = 0; i < collections.length; i++){
             $('#list').append('<li class="collection clicky">' + collections[i] + '</li>');
@@ -99,6 +111,7 @@ $(document).ready(function(){
 
     now.returnDocuments = function(err,documents){
         $('#list').empty();
+        $('#controls').show();
         
         for(var i = 0; i < documents.length; i++){
             $('#list').append('<li class="document clicky" id="' + i + '">' + documents[i]._id + '</li>');
@@ -106,6 +119,7 @@ $(document).ready(function(){
     }
 
     now.returnDocument = function(err,document){
+        $('#controls').hide();
         $('#list').empty().append(displayDocument(document,'#list'));
     }
 });
