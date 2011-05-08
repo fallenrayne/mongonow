@@ -1,3 +1,7 @@
+var current = 1;
+var next = 51;
+var prev = 1;
+
 function getCollections(e){
     var name = $(e.target).html();
     addHistory(name,'db');
@@ -7,7 +11,15 @@ function getCollections(e){
 function getDocuments(e){
     var name = $(e.target).html();
     addHistory(name,'col');
-    now.getDocuments(name);
+    now.getDocuments(name,current);
+}
+
+function nextDocuments(){
+
+}
+
+function prevDocuments(){
+    
 }
 
 function getDocument(e){
@@ -22,7 +34,7 @@ function addHistory(name,type){
         while($('#history').children().size() >= 5){
             $('#history').children('span:first-child').remove();
         }
-        $('#history').append('<span class="historyText" type="' + type + '">' + name + '</span>');
+        $('#history').append('<span class="historyText clicky" type="' + type + '">' + name + '</span>');
     }
 }
 
@@ -43,14 +55,6 @@ function traverseHistory(e){
     }
 }
 
-$('#history').delegate('.historyText','click',traverseHistory);
-
-$('#list').delegate('.db','click',getCollections);
-
-$('#list').delegate('.collection','click',getDocuments);
-
-$('#list').delegate('.document','click',getDocument);
-
 function displayDocument(doc,id){
     var output = "";
     for(var prop in doc){
@@ -61,41 +65,47 @@ function displayDocument(doc,id){
                 output += displayDocument(doc[prop],'#'+prop);
                 output += "</ul>";
             }else{
-                output += '<li class="prop">' + prop + ': ' + doc[prop] + '</li>';
+                output += '<li><span class="prop">' + prop + ':</span><span class="val"> ' + doc[prop] + '</span></li>';
             }
         }
     }
     return output;
 }
 
-$('#getDatabases').click(function(){
-    now.getDatabases();
+$(document).ready(function(){
+    $('#history').delegate('.historyText','click',traverseHistory);
+
+    $('#list').delegate('.db','click',getCollections);
+
+    $('#list').delegate('.collection','click',getDocuments);
+
+    $('#list').delegate('.document','click',getDocument);
+
+    now.returnDatabases = function(err,databases){
+        $('#list').empty();
+
+        for(var i = 0; i < databases.length; i++){
+            $('#list').append('<li class="db clicky">' + databases[i] + '</li>');
+        }
+    }
+
+    now.returnCollections = function(err,collections){
+        $('#list').empty();
+
+        for(var i = 0; i < collections.length; i++){
+            $('#list').append('<li class="collection clicky">' + collections[i] + '</li>');
+        }
+    }
+
+    now.returnDocuments = function(err,documents){
+        $('#list').empty();
+        
+        for(var i = 0; i < documents.length; i++){
+            $('#list').append('<li class="document clicky" id="' + i + '">' + documents[i]._id + '</li>');
+        }
+    }
+
+    now.returnDocument = function(err,document){
+        $('#list').empty().append(displayDocument(document,'#list'));
+    }
 });
-
-now.returnDatabases = function(err,databases){
-    $('#list').empty();
-
-    for(var i = 0; i < databases.length; i++){
-        $('#list').append('<li class="db">' + databases[i] + '</li>');
-    }
-}
-
-now.returnCollections = function(err,collections){
-    $('#list').empty();
-    
-    for(var i = 0; i < collections.length; i++){
-        $('#list').append('<li class="collection">' + collections[i] + '</li>');
-    }
-}
-
-now.returnDocuments = function(err,documents){
-    $('#list').empty();
-
-    for(var i = 0; i < documents.length; i++){
-        $('#list').append('<li class="document" id="' + i + '">' + documents[i]._id + '</li>');
-    }
-}
-
-now.returnDocument = function(err,document){
-    $('#list').empty().append(displayDocument(document,'#list'));
-}

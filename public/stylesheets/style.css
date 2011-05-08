@@ -1,11 +1,12 @@
 body {
   margin:0;
   padding:0;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font: 14px "Lucida Grande", Helvetica, sans-serif;
 }
 
 header {
   font-weight:bold;
+  font-size:1.5em;
   padding:3px;
   background-color:#000;
   color:#fff;
@@ -19,4 +20,32 @@ header {
 .historyText {
     color:white;
     padding:0 5px;
+}
+
+#list {
+    list-style: none;
+    margin:0;
+    padding:0;
+}
+
+.clicky {
+    cursor:pointer;
+}
+
+#list li {
+    margin:10px;
+    border:1px solid #000;
+    font-size:1.5em;
+    padding:3px;
+    font-weight: bold;
+    background-color:#666;
+    color:#fff;
+}
+
+.prop {
+    color:#ff0;
+}
+
+.clicky:hover {
+    color:#999;
 }
